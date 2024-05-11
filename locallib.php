@@ -22,27 +22,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Show selected hidden courses.
+/**
+ * Show selected hidden courses.
+ *
+ * @param array $courseids
+ */
 function block_my_enrolled_courses_show_courses($courseids) {
     global $DB, $USER;
 
     if (! empty($courseids)) {
         foreach ($courseids as $courseid) {
-            $DB->delete_records('block_my_enrolled_courses', array('userid' => $USER->id, 'courseid' => $courseid, 'hide' => 1));
+            $DB->delete_records('block_my_enrolled_courses', ['userid' => $USER->id, 'courseid' => $courseid, 'hide' => 1]);
         }
-        $coursesorder = $DB->get_record('block_myenrolledcoursesorder', array('userid' => $USER->id));
-        $coursesinorder = array();
+        $coursesorder = $DB->get_record('block_myenrolledcoursesorder', ['userid' => $USER->id]);
+        $coursesinorder = [];
         $record = new stdClass();
-        if (! empty($coursesorder)) {
-            if (is_string($coursesorder->courseorder)) {
-                $coursesinorder = json_decode($coursesorder->courseorder, true);
-                $courses_diff = array_diff($courseids, $coursesinorder);
-                if(! empty($courses_diff)) {
-                    $courseids = array_merge($courseids, $coursesinorder);
-                    $record->id = $coursesorder->id;
-                    $record->courseorder = json_encode($courseids);
-                    $DB->update_record('block_myenrolledcoursesorder', $record);
-                }
+        if (! empty($coursesorder) && is_string($coursesorder->courseorder)) {
+            $coursesinorder = json_decode($coursesorder->courseorder, true);
+            $courses_diff = array_diff($courseids, $coursesinorder);
+            if(! empty($courses_diff)) {
+                $courseids = array_merge($courseids, $coursesinorder);
+                $record->id = $coursesorder->id;
+                $record->courseorder = json_encode($courseids);
+                $DB->update_record('block_myenrolledcoursesorder', $record);
             }
         } else {
             $record->userid = $USER->id;
@@ -52,7 +54,11 @@ function block_my_enrolled_courses_show_courses($courseids) {
     }
 }
 
-// Hide seleced courses.
+/**
+ * Hide seleced courses.
+ *
+ * @param array $courseids
+ */
 function block_my_enrolled_courses_hide_courses($courseids) {
     global $DB, $USER;
 
@@ -72,15 +78,13 @@ function block_my_enrolled_courses_hide_courses($courseids) {
         $coursesorder = $DB->get_record('block_myenrolledcoursesorder', array('userid' => $USER->id));
         $coursesinorder = array();
         $record = new stdClass();
-        if (! empty($coursesorder)) {
-            if (is_string($coursesorder->courseorder)) {
-                $coursesinorder = json_decode($coursesorder->courseorder, true);
-                $courseids = array_diff($coursesinorder, $courseids);
-                $record->id = $coursesorder->id;
-                $courseids = array_values($courseids);
-                $record->courseorder = json_encode($courseids);
-                $DB->update_record('block_myenrolledcoursesorder', $record);
-            }
+        if (! empty($coursesorder) && is_string($coursesorder->courseorder)) {
+            $coursesinorder = json_decode($coursesorder->courseorder, true);
+            $courseids = array_diff($coursesinorder, $courseids);
+            $record->id = $coursesorder->id;
+            $courseids = array_values($courseids);
+            $record->courseorder = json_encode($courseids);
+            $DB->update_record('block_myenrolledcoursesorder', $record);
         } else {
             $enroledcourses = enrol_get_my_courses();
             $visiblecourses = array();
@@ -98,7 +102,10 @@ function block_my_enrolled_courses_hide_courses($courseids) {
     }
 }
 
-// Return HTML for visible courses list.
+/**
+ * Return HTML for visible courses list.
+ * 
+ */
 function block_my_enrolled_courses_get_visible_courses() {
     global $DB, $USER;
 
@@ -132,7 +139,10 @@ function block_my_enrolled_courses_get_visible_courses() {
     return $html;
 }
 
-// Return HTML for hidden courses list.
+/**
+ * Return HTML for hidden courses list.
+ *
+ */
 function block_my_enrolled_courses_get_hidden_courses() {
     global $DB, $USER;
 
@@ -153,23 +163,24 @@ function block_my_enrolled_courses_get_hidden_courses() {
     $lable = get_string('none', 'block_my_enrolled_courses');
     if (! empty($hiddencourses)) {
         $lable = get_string('hidden_lable', 'block_my_enrolled_courses'). '(' . count($hiddencourses) . ')';
-    }
-
-    $html .= html_writer::start_tag('optgroup', array('label' => $lable));
-
-    if (! empty($hiddencourses)) {
+        $html .= html_writer::start_tag('optgroup', array('label' => $lable));
         foreach ($hiddencourses as $id => $course) {
             $html .= html_writer::start_tag('option', array('value' => $id));
             $html .= format_string($course->fullname);
             $html .= html_writer::end_tag('option');
         }
+    }  else {
+        $html .= html_writer::start_tag('optgroup', array('label' => $lable));
     }
 
     $html .= html_writer::end_tag('optgroup');
     return $html;
 }
 
-// Return HTML for visible courses list in my_courses block.
+/**
+ * Return HTML for visible courses list in my_courses block.
+ *
+ */
 function block_my_enrolled_courses_visible_in_block() {
     global $DB, $USER, $OUTPUT, $CFG;
 
@@ -208,10 +219,12 @@ function block_my_enrolled_courses_visible_in_block() {
     return $html;
 }
 
-// Return HTML for list of course modules in my_courses block.
+/**
+ * Return HTML for list of course modules in my_courses block.
+ * 
+ * @param int $id
+ */
 function block_my_enrolled_courses_course_modules($id) {
-    global $DB, $CFG, $USER;
-
     $mod_info = get_fast_modinfo($id);
     $content = '';
     if(! empty($mod_info)) {
@@ -221,11 +234,7 @@ function block_my_enrolled_courses_course_modules($id) {
             if($mod->visible == 1) {
                 $content .= html_writer::start_tag('li', array());
                 $mod_url = '';
-                if($CFG->version < 2014051200) {
-                	$mod_url = $mod->get_url();
-                } else {
-                	$mod_url = $mod->url;
-                }
+                $mod_url = $mod->url;
                 $content .= html_writer::link($mod_url, $mod->name);
                 $content .= html_writer::end_tag('li');
             }
@@ -236,7 +245,11 @@ function block_my_enrolled_courses_course_modules($id) {
     return $content;
 }
 
-// Remove older courses records from database.
+/**
+ * Remove older courses records from database.
+ *
+ * @param array $enroledcourses
+ */
 function block_my_enrolled_courses_manage_courses($enroledcourses) {
     global $DB, $USER;
     

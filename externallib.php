@@ -29,27 +29,29 @@ require_once("$CFG->libdir/externallib.php");
  * @return external_function_parameters
  */
 class moodle_my_enrolled_courses_shorting_external extends external_api {
-       /**
+    /**
      * Returns description of method parameters
      * @return external_function_parameters
      */
     public static function my_enrolled_courses_shorting_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseids' => new external_value(PARAM_RAW, 'course ids')
-            )
+            ]
         );
     }
 
-
+    /**
+     * update block_myenrolledcoursesorder table by external services
+     */
     public static function my_enrolled_courses_shorting($courseids) {
         global $DB, $USER;
         $courseids = self::validate_parameters(self::my_enrolled_courses_shorting_parameters(),
-            array(
+            [
                 'courseids' => $courseids,
-            )
+            ]
         );
-        $order = $DB->get_record('block_myenrolledcoursesorder', array('userid' => $USER->id));
+        $order = $DB->get_record('block_myenrolledcoursesorder', ['userid' => $USER->id]);
         $neworder = new stdClass();
         $neworder->courseorder = $courseids['courseids'];
         if (empty($order)) {
@@ -60,7 +62,6 @@ class moodle_my_enrolled_courses_shorting_external extends external_api {
             $DB->update_record('block_myenrolledcoursesorder', $neworder);
         }
         return json_encode($neworder);
-        die;
     }
 
     /**

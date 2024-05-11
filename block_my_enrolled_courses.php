@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * main block page
+ * main block page for creating the block in frontend
  *
  * @package    block_my_enrolled_courses
  * @copyright  DualCube (https://dualcube.com)
@@ -33,7 +33,6 @@ class block_my_enrolled_courses extends block_base {
     public function get_content() {
         global $CFG, $PAGE;
         $PAGE->requires->js_call_amd('block_my_enrolled_courses/myenrolledcourses', 'sorting');
-        $PAGE->requires->css('/blocks/my_enrolled_courses/style.css');
 
         if ($this->content !== null) {
             return $this->content;

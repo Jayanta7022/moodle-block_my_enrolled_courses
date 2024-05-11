@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * access
+ * access Api for 
  *
  * @package    block_my_enrolled_courses
  * @copyright  DualCube (https://dualcube.com)
@@ -24,28 +24,27 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'block/my_enrolled_courses:myaddinstance' => array(
+    'block/my_enrolled_courses:myaddinstance' =>[
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW
-        ),
-
+        ],
         'clonepermissionsfrom' => 'moodle/my:manageblocks'
-    ),
+    ],
 
-    'block/my_enrolled_courses:addinstance' => array(
+    'block/my_enrolled_courses:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ),
+        ],
 
         'clonepermissionsfrom' => 'moodle/site:manageblocks'
-    )
-);
+    ]
+];

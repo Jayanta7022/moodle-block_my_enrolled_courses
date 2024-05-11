@@ -25,7 +25,7 @@
 require_once('../../config.php');
 require_once('locallib.php');
 
-global $DB, $CFG, $USER, $PAGE;
+global $DB, $CFG, $PAGE;
 
 $courseid = optional_param('courseid', SITEID, PARAM_INT);
 $SITE = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);

@@ -20,13 +20,12 @@ define(['jquery', 'core/ajax', 'core/sortable_list'], function($, ajax, Sortable
             });
             str += '\"]';
             ids.courseids = str;
-            var promises = ajax.call([
+             ajax.call([
                 {
                     methodname: 'moodle_my_enrolled_courses_shorting',
                     args: ids
                 }
-            ])[0];
-           
+            ]);
         });
 
         $( ".expandable_icon" ).unbind('click');

@@ -15,23 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * services
+ * Web service function declarations for the block_myenrolled_course plugin.
  *
  * @package    block_my_enrolled_courses
  * @copyright  DualCube (https://dualcube.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$services = array(
-    'moodle_block_my_enrolled_courses' => array(
-        'functions' => array('moodle_my_enrolled_courses_shorting'),
-        'requiredcapability' => '',
-        'restrictedusers' => 0,
-        'enabled' => 1,
-    )
-);
-$functions = array(
-    'moodle_my_enrolled_courses_shorting' => array(
+$functions = [
+    'moodle_my_enrolled_courses_shorting' => [
         'classname' => 'moodle_my_enrolled_courses_shorting_external',
         'methodname' => 'my_enrolled_courses_shorting',
         'classpath' => 'blocks/my_enrolled_courses/externallib.php',
@@ -39,5 +31,5 @@ $functions = array(
         'type' => 'read',
         'ajax' => true,
         'loginrequired' => true
-    )
-);
+    ]
+];
