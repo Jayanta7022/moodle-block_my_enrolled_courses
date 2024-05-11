@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ defined('MOODLE_INTERNAL') || die();
 $functions = [
     'moodle_my_enrolled_courses_shorting' => [
         'classname' => 'moodle_my_enrolled_courses_shorting_external',
@@ -30,6 +31,6 @@ $functions = [
         'description' => 'Get shorting data',
         'type' => 'read',
         'ajax' => true,
-        'loginrequired' => true
-    ]
+        'loginrequired' => true,
+    ],
 ];

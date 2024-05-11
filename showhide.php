@@ -23,14 +23,15 @@
  */
 
 require_once('../../config.php');
-require_once('locallib.php');
 
 global $DB, $CFG, $PAGE;
 
+$createblock = new \block_my_enrolled_courses\block_my_enrolled_courses_create_block();
+
 $courseid = optional_param('courseid', SITEID, PARAM_INT);
-$SITE = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+$SITE = $DB->get_record('course', ['id' => $courseid], '*', MUST_EXIST);
 $contextid = required_param('contextid', PARAM_INT);
-$url = new moodle_url($CFG->wwwroot . '/blocks/my_enrolled_courses/showhide.php', array('contextid' => $contextid));
+$url = new moodle_url($CFG->wwwroot . '/blocks/my_enrolled_courses/showhide.php', ['contextid' => $contextid]);
 list($context, $course, $cm) = get_context_info_array($contextid);
 
 require_login($SITE, false, $cm);
@@ -53,14 +54,14 @@ $data = data_submitted();
 // Show selected courses.
 if (optional_param('show', false, PARAM_BOOL) && confirm_sesskey()) {
     if (isset($data->hidden)) {
-        block_my_enrolled_courses_show_courses($data->hidden);
+      $createblock->block_my_enrolled_courses_show_courses($data->hidden);
     }
 }
 
 // Hide selected courses.
 if (optional_param('hide', false, PARAM_BOOL) && confirm_sesskey()) {
     if (isset($data->visible)) {
-        block_my_enrolled_courses_hide_courses($data->visible);
+       $createblock->block_my_enrolled_courses_hide_courses($data->visible);
     }
 }
 
@@ -70,61 +71,60 @@ $pagetitle = get_string('showhide_page_title', 'block_my_enrolled_courses');
 echo $OUTPUT->heading($pagetitle);
 
 $html = '';
-$html .= html_writer::start_tag('div', array('id' => 'showhide_section'));
-$html .= html_writer::start_tag('form', array('id' => 'showhide_form', 'method' => 'post', 'action' => $url));
+$html .= html_writer::start_tag('div', ['id' => 'showhide_section']);
+$html .= html_writer::start_tag('form', ['id' => 'showhide_form', 'method' => 'post', 'action' => $url]);
 $sesskey = sesskey();
-$html .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => $sesskey));
-$html .= html_writer::start_tag('table', array('id' => 'showhidecourses', 'class' => 'generaltable block_my_enrolled_courses'));
+$html .= html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => $sesskey]);
+$html .= html_writer::start_tag('table', ['id' => 'showhidecourses', 'class' => 'generaltable block_my_enrolled_courses']);
 $html .= html_writer::start_tag('tr');
-$html .= html_writer::start_tag('td', array('id' => 'visiblecourses', 'class' => 'block_my_enrolled_courses'));
+$html .= html_writer::start_tag('td', ['id' => 'visiblecourses', 'class' => 'block_my_enrolled_courses']);
 $html .= html_writer::start_tag('div');
-$html .= html_writer::start_tag('lable', array('for' => 'visible'));
+$html .= html_writer::start_tag('lable', ['for' => 'visible']);
 $html .= html_writer::start_tag('b');
 $html .= get_string('visible_lable', 'block_my_enrolled_courses');
 $html .= html_writer::end_tag('b');
 $html .= html_writer::end_tag('lable');
 $html .= html_writer::end_tag('div');
 $html .= html_writer::start_tag('div');
-$html .= html_writer::start_tag('select', array('name' => 'visible[]', 'id' => 'visible', 'multiple' => 'multiple', 'size' => 20));
-$html .= block_my_enrolled_courses_get_visible_courses();
+$html .= html_writer::start_tag('select', ['name' => 'visible[]', 'id' => 'visible', 'multiple' => 'multiple', 'size' => 20]);
+$html .= $createblock->block_my_enrolled_courses_get_visible_courses();
 $html .= html_writer::end_tag('select');
 $html .= html_writer::end_tag('div');
 $html .= html_writer::end_tag('td');
-$html .= html_writer::start_tag('td', array('id' => 'showorhide', 'class' => 'block_my_enrolled_courses'));
-$html .= html_writer::start_tag('div', array('id' => 'showbtn', 'class' => 'block_my_enrolled_courses'));
+$html .= html_writer::start_tag('td', ['id' => 'showorhide', 'class' => 'block_my_enrolled_courses']);
+$html .= html_writer::start_tag('div', ['id' => 'showbtn', 'class' => 'block_my_enrolled_courses']);
 $submittext = $OUTPUT->larrow().get_string('showcourse', 'block_my_enrolled_courses');
-$html .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'show', 'id' => 'show',
-    'value' => $submittext));
+$html .= html_writer::empty_tag('input', ['type' => 'submit', 'name' => 'show', 'id' => 'show',
+    'value' => $submittext]);
 $html .= html_writer::end_tag('div');
-$html .= html_writer::start_tag('div', array('id' => 'hidebtn', 'class' => 'block_my_enrolled_courses'));
+$html .= html_writer::start_tag('div', ['id' => 'hidebtn', 'class' => 'block_my_enrolled_courses']);
 $submittext = $OUTPUT->rarrow().get_string('hidecourse', 'block_my_enrolled_courses');
-$html .= html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'hide', 'id' => 'hide',
-    'value' => $submittext));
+$html .= html_writer::empty_tag('input', ['type' => 'submit', 'name' => 'hide', 'id' => 'hide',
+    'value' => $submittext]);
 $html .= html_writer::end_tag('div');
 
 $html .= html_writer::end_tag('td');
-$html .= html_writer::start_tag('td', array('id' => 'hiddencourses', 'class' => 'block_my_enrolled_courses'));
+$html .= html_writer::start_tag('td', ['id' => 'hiddencourses', 'class' => 'block_my_enrolled_courses']);
 $html .= html_writer::start_tag('div');
-$html .= html_writer::start_tag('lable', array('for' => 'hidden'));
+$html .= html_writer::start_tag('lable', ['for' => 'hidden']);
 $html .= html_writer::start_tag('b');
 $html .= get_string('hidden_lable', 'block_my_enrolled_courses');
 $html .= html_writer::end_tag('b');
 $html .= html_writer::end_tag('lable');
 $html .= html_writer::end_tag('div');
 $html .= html_writer::start_tag('div');
-$html .= html_writer::start_tag('select', array('name' => 'hidden[]', 'id' => 'hidden', 'multiple' => 'multiple',  'size' => 20));
-$html .= block_my_enrolled_courses_get_hidden_courses();
+$html .= html_writer::start_tag('select', ['name' => 'hidden[]', 'id' => 'hidden', 'multiple' => 'multiple',  'size' => 20]);
+$html .= $createblock->block_my_enrolled_courses_get_hidden_courses();
 $html .= html_writer::end_tag('select');
 $html .= html_writer::end_tag('div');
 $html .= html_writer::end_tag('td');
 $html .= html_writer::end_tag('tr');
 $html .= html_writer::end_tag('table');
 $html .= html_writer::end_tag('form');
-$html .= html_writer::start_tag('div', array('class'=>'saveandback'));
+$html .= html_writer::start_tag('div', ['class' => 'saveandback']);
 $url = new moodle_url($CFG->wwwroot );
 $html .= html_writer::link($url, get_string('submitandback', 'block_my_enrolled_courses'));
 $html .= html_writer::end_tag('div');
 $html .= html_writer::end_tag('div');
 echo $html;
-
 echo $OUTPUT->footer();

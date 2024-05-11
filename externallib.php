@@ -36,7 +36,7 @@ class moodle_my_enrolled_courses_shorting_external extends external_api {
     public static function my_enrolled_courses_shorting_parameters() {
         return new external_function_parameters(
             [
-                'courseids' => new external_value(PARAM_RAW, 'course ids')
+                'courseids' => new external_value(PARAM_RAW, 'course ids'),
             ]
         );
     }
@@ -71,5 +71,4 @@ class moodle_my_enrolled_courses_shorting_external extends external_api {
     public static function my_enrolled_courses_shorting_returns() {
         return new external_value(PARAM_RAW, 'The updated JSON output');
     }
-
 }
