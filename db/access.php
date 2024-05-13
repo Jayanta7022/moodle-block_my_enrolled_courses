@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * access Api for
+ * access Api
  *
  * @package    block_my_enrolled_courses
  * @copyright  DualCube (https://dualcube.com)

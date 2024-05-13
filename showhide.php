@@ -54,14 +54,14 @@ $data = data_submitted();
 // Show selected courses.
 if (optional_param('show', false, PARAM_BOOL) && confirm_sesskey()) {
     if (isset($data->hidden)) {
-      $createblock->block_my_enrolled_courses_show_courses($data->hidden);
+        $createblock->block_my_enrolled_courses_show_courses($data->hidden);
     }
 }
 
 // Hide selected courses.
 if (optional_param('hide', false, PARAM_BOOL) && confirm_sesskey()) {
     if (isset($data->visible)) {
-       $createblock->block_my_enrolled_courses_hide_courses($data->visible);
+        $createblock->block_my_enrolled_courses_hide_courses($data->visible);
     }
 }
 

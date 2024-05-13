@@ -22,9 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-// require_once('locallib.php');
 
 /**
  * main block page for creating the block in frontend
@@ -34,9 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_my_enrolled_courses extends block_base {
-    
-    // public $createblock = new createblock/block_my_enrolled_courses_show_courses();
-    // public $createblock = null;
+
     /**
      * init function from block element
      */
@@ -54,9 +49,9 @@ class block_my_enrolled_courses extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
-       $this->content = new stdClass();
-       $createblock = new \block_my_enrolled_courses\block_my_enrolled_courses_create_block();
-       $html = $createblock->block_my_enrolled_courses_visible_in_block();
+        $this->content = new stdClass();
+        $createblock = new \block_my_enrolled_courses\block_my_enrolled_courses_create_block();
+        $html = $createblock->block_my_enrolled_courses_visible_in_block();
         $this->content->text = $html;
         $url = new moodle_url($CFG->wwwroot . '/blocks/my_enrolled_courses/showhide.php', ['contextid' => $this->context->id]);
         $showhidetext = get_string('showhide', 'block_my_enrolled_courses');

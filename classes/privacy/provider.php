@@ -15,23 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * language file
+ * privacy Api
  *
  * @package    block_my_enrolled_courses
  * @copyright  DualCube (https://dualcube.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['my_enrolled_courses:addinstance'] = 'Add a my enrolled courses block';
-$string['my_enrolled_courses:myaddinstance'] = 'Add a my enrolled courses block to my moodle';
-$string['pluginname'] = 'My enrolled courses';
-$string['block_name'] = 'My enrolled courses';
-$string['showhide'] = 'Show/Hide courses';
-$string['showcourse'] = 'Show courses';
-$string['hidecourse'] = 'Hide courses';
-$string['submitandback'] = 'Save and back';
-$string['visible_lable'] = 'Visible courses';
-$string['hidden_lable'] = 'Hidden courses';
-$string['showhide_page_title'] = 'Show/hide courses';
-$string['none'] = 'NONE';
-$string['colapsibleplus'] = '+';
+namespace block_my_enrolled_courses\privacy;
+
+/**
+ * privacy api
+ *
+ * @package    block_my_enrolled_courses
+ * @copyright  DualCube (https://dualcube.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}
